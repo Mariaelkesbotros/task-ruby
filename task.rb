@@ -1,83 +1,77 @@
 class Stack
   def initialize
-    @stack = []
-    @max_stack = []
+    @stack = []           
+    @max_stack = []       
+    @sum = 0               
   end
 
-  def push(num)
-    raise ArgumentError, "Only unsigned integers allowed" unless num.is_a?(Integer) && num >= 0
+ 
+  def push(number)
+    @stack.push(number)
+    @sum += number        
 
-    @stack.push(num)
-    @max_stack.push(num) if @max_stack.empty? || num >= @max_stack.last
+   
+    if @max_stack.empty? || number >= @max_stack.last
+      @max_stack.push(number)
+    else
+      @max_stack.push(@max_stack.last)
+    end
   end
 
+ 
   def pop
-    return nil if @stack.empty?
+    return nil if @stack.empty? 
 
-    value = @stack.pop
-    @max_stack.pop if value == @max_stack.last
-    value
+    popped_number = @stack.pop
+    @max_stack.pop
+    @sum -= popped_number     
+    popped_number
   end
 
+ 
   def max
+    return nil if @max_stack.empty? 
+
     @max_stack.last
   end
 end
 
 class Extras < Stack
-  def initialize
-    super
-    @sum = 0
-    @count = 0
-  end
-
-  def push(num)
-    super
-    @sum += num
-    @count += 1
-  end
-
-  def pop
-    return nil if @stack.empty?
-
-    value = super
-    @sum -= value
-    @count -= 1
-    value
-  end
-
+ 
   def mean
-    return nil if @count.zero?
+    return 0 if @stack.empty?  
 
-    @sum.to_f / @count
-  end
-
-  def pop_all
-    while (value = pop)
-      print "#{value} "
-    end
-    puts
+    @sum.to_f / @stack.size   
   end
 end
+
 
 stack = Extras.new
-puts "Enter an unsigned integer (or type 'exit' to finish):"
 
-while input = gets.chomp
-  break if input.strip.downcase == 'exit'
-  begin
-    num = Integer(input)
-    stack.push(num)
-  rescue ArgumentError => e
-    puts "Invalid input: #{e.message}. Please enter a valid unsigned integer."
-  rescue StandardError
-    puts "Invalid input. Please enter a valid unsigned integer."
-  end
-  puts "Enter another unsigned integer (or type 'exit' to finish):"
+# Push numbers 
+stack.push(20)
+stack.push(400)
+stack.push(80)
+stack.push(330)
+stack.push(4000)
+stack.push(900)
+stack.push(650)
+stack.push(50)
+stack.push(2)
+
+
+puts "Max value: #{stack.max}"   
+puts "Mean value: #{stack.mean}"  
+
+
+puts "Popped values (FILO):"
+while (popped = stack.pop)
+  puts popped
 end
-
-puts "The max number is: #{stack.max}"
-puts "The average of the numbers is: #{stack.mean}"
-print "The numbers after FILO are: "
-stack.pop_all
-
+# Answer to the question 
+puts "\nProve why your solution is considered fast(er)?:"
+puts "The solution is optimized by using an auxiliary stack for the `max` method, ensuring constant-time retrieval (O(1)) of the maximum value, even with a large number of elements."
+puts "The `mean` method runs in constant-time (O(1)) by maintaining a running sum, avoiding the need to traverse the entire stack."
+puts "Both the `push` and `pop` operations are performed in constant time (O(1)), ensuring fast performance regardless of stack size."
+puts "These optimizations make the solution highly efficient, even for stacks with millions of elements, handling frequent `max` and `mean` calls with ease."
+puts "Overall, the approach minimizes time complexity and provides a scalable solution for large-scale data processing."
