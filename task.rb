@@ -1,36 +1,39 @@
 require 'benchmark'
+
 class Stack
   def initialize
     @stack = []
-    @max_value = nil
+    @max_value = nil  
     @sum = 0
   end
 
   def push(number)
     @stack.push(number)
-    @sum += number
     @max_value = number if @max_value.nil? || number > @max_value
+    @sum += number
   end
 
   def pop
-    if @stack.any?
-      popped_number = @stack.pop
-      @sum -= popped_number
+    return nil if @stack.empty?
 
-      @max_value = @stack.max if popped_number == @max_value
-      
-      popped_number
+    popped_number = @stack.pop
+    @sum -= popped_number  
+
+    if popped_number == @max_value
+      @max_value = @stack.max unless @stack.empty?
     end
+
+    popped_number
   end
 
   def max
-    @max_value unless @stack.empty?
+    @max_value
   end
-end
+end 
 
 class Extras < Stack
   def mean
-    @sum.to_f / @stack.size unless @stack.empty?
+    @stack.empty? ? 0.0 : @sum.to_f / @stack.size
   end
 end
 
@@ -39,18 +42,43 @@ stack = Extras.new
 stack.push(rand(1..10))
 end
 
-max_time = Benchmark.measure { stack.max }
-pop_time = Benchmark.measure { stack.pop }
-mean_time = Benchmark.measure { stack.mean }
 
-puts "Max value: #{stack.max}"
+# Push numbers 
+=begin
+
+stack.push(20)
+stack.push(400)
+stack.push(80)
+stack.push(330)
+stack.push(4000)
+stack.push(900)
+stack.pop
+stack.push(700)
+stack.push(50)
+stack.pop
+stack.push(2)
+stack.pop
+stack.push(10000)
+stack.pop
+=end
+
+puts "Max value: #{stack.max}"  
 puts "Mean value: #{stack.mean}"
 
-puts "Max execution time: #{max_time.real} seconds"
-puts "Mean execution time: #{mean_time.real} seconds"
-puts "pop execution time: #{pop_time.real} seconds"
-
-puts "Popped values with (FILO):"
+=begin
+puts "Popped values (FILO):"
 while (popped = stack.pop)
   puts popped
 end
+=end
+max_time = Benchmark.measure { stack.max }.real
+pop_time = Benchmark.measure { stack.pop }.real
+mean_time = Benchmark.measure { stack.mean }.real
+
+
+puts "Max execution time: #{format('%.6f', max_time)} seconds"
+puts "Mean execution time: #{format('%.6f', mean_time)} seconds"
+puts "Pop execution time: #{format('%.6f', pop_time)} seconds"
+
+
+
