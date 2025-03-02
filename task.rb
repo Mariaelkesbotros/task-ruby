@@ -14,16 +14,16 @@ class Stack
   end
 
   def pop
-    return nil if @stack.empty?
+    unless @stack.empty?
+      popped_number = @stack.pop
+      @sum -= popped_number  
 
-    popped_number = @stack.pop
-    @sum -= popped_number  
+      if popped_number == @max_value
+        @max_value = @stack.max unless @stack.empty?
+      end
 
-    if popped_number == @max_value
-      @max_value = @stack.max unless @stack.empty?
+      popped_number
     end
-
-    popped_number
   end
 
   def max
@@ -38,19 +38,21 @@ class Extras < Stack
 end
 
 stack = Extras.new
+=begin
 10000000.times.each do|i|
-stack.push(rand(1..10))
+stack.push(rand(1..100))
 end
+=end
 
 
 # Push numbers 
-=begin
 
 stack.push(20)
 stack.push(400)
 stack.push(80)
 stack.push(330)
 stack.push(4000)
+stack.pop
 stack.push(900)
 stack.pop
 stack.push(700)
@@ -60,7 +62,6 @@ stack.push(2)
 stack.pop
 stack.push(10000)
 stack.pop
-=end
 
 puts "Max value: #{stack.max}"  
 puts "Mean value: #{stack.mean}"
