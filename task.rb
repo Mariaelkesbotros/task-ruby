@@ -39,35 +39,33 @@ end
 
 stack = Extras.new
 =begin
+push_time = Benchmark.measure do 
 10000000.times.each do|i|
-stack.push(rand(1..100))
+stack.push(rand(1..10))
 end
+end.real
+
 =end
-
-
 # Push numbers 
-
 stack.push(20)
+stack.pop
 stack.push(400)
 stack.push(80)
 stack.push(330)
 stack.push(4000)
 stack.pop
 stack.push(900)
-stack.pop
 stack.push(700)
 stack.push(50)
-stack.pop
 stack.push(2)
 stack.pop
-stack.push(10000)
-stack.pop
+stack.push(100)
 
 puts "Max value: #{stack.max}"  
 puts "Mean value: #{stack.mean}"
 
 =begin
-puts "Popped values (FILO):"
+puts "Popped values  with (FILO):"
 while (popped = stack.pop)
   puts popped
 end
@@ -76,10 +74,7 @@ max_time = Benchmark.measure { stack.max }.real
 pop_time = Benchmark.measure { stack.pop }.real
 mean_time = Benchmark.measure { stack.mean }.real
 
-
+#puts "Push execution time: #{format('%.6f', push_time)} seconds"
 puts "Max execution time: #{format('%.6f', max_time)} seconds"
 puts "Mean execution time: #{format('%.6f', mean_time)} seconds"
 puts "Pop execution time: #{format('%.6f', pop_time)} seconds"
-
-
-
